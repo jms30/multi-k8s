@@ -9,10 +9,10 @@ script:
     - docker run -e CI=true smj2020/react-test npm test
 
 after_success:
-    - docker build -t smj2020/multi-client -f ./client
-    - docker build -t smj2020/multi-nginx -f ./nginx
-    - docker build -t smj2020/multi-server -f ./server
-    - docker build -t smj2020/multi-worker -f ./worker
+    - docker build -t smj2020/multi-client ./client
+    - docker build -t smj2020/multi-nginx ./nginx
+    - docker build -t smj2020/multi-server ./server
+    - docker build -t smj2020/multi-worker ./worker
     # Login to docker CLI
     - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
     # Push to docker hub
