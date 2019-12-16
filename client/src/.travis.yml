@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t smj2020/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true smj2020/react-test npm test
+
+after_success:
+    - docker build -t smj2020/multi-client -f ./client
+    - docker build -t smj2020/multi-nginx -f ./nginx
+    - docker build -t smj2020/multi-server -f ./server
+    - docker build -t smj2020/multi-worker -f ./worker
+    # Login to docker CLI
+    - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push to docker hub
+    - docker push smj2020/multi-client
+    - docker push smj2020/multi-nginx
+    - docker push smj2020/multi-server
+    - docker push smj2020/multi-worker
